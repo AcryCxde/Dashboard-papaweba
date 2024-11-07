@@ -3,7 +3,7 @@ from IPython.display import display
 
 # Загрузка данных из конкретного листа
 sheet_name = "Раздел1"
-df = pd.read_excel("D:\Рабочий стол\Примеры\Свердловская область 73 МО 2023\Свердловская область 73 МО 2023\ЕКАТЕРИНБУРГ 2023.xlsm", sheet_name=sheet_name, header=None)
+df = pd.read_excel("/Users/romanov/Documents/ЕКАТЕРИНБУРГ 2023.xlsm", sheet_name=sheet_name, header=None)
 
 df.drop([0,1], inplace=True)
 df.reset_index(drop=True, inplace=True)
