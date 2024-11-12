@@ -7,49 +7,34 @@ dbhandle = PostgresqlDatabase(
     host='dashboard-test-acrywxrk.db-msk0.amvera.tech'
 )
 
+
 class BaseModel(Model):
     class Meta:
         database = dbhandle
 
-    year = IntegerField(null=False)
-    city = CharField(null=False)
 
-class Section1Data(BaseModel):
-    id = PrimaryKeyField(null=False)
+class City(BaseModel):
+    city = CharField(unique=True)
 
-    # всего
-    inTotal = IntegerField(null=False)
-    # в сельской местности
-    countrysideEmployees = IntegerField(null=False)
-    # женщины
-    womanEmployees = IntegerField(null=False)
-    # кол-во вакансий
-    vacancies = IntegerField(null=True)
-    # кол-во созданных рабочих мест
-    newWorkplaces = IntegerField(null=False)
 
-    class EmployeesType:
-        # штатные работники
-        regular = IntegerField(null=True)
-        # специалисты, впервые приступившие к работе в отчетном периоде
-        new = IntegerField(null=False)
+class Year(BaseModel):
+    year = IntegerField(unique=True)
 
-    class EmployeesEducation:
-        # с высшим образованием
-        higherEducation = IntegerField(null=False)
-        # со средним образованием
-        middleEducation = IntegerField(null=False)
 
-    class EmployeesAge:
-        # до 30 лет
-        young = IntegerField(null=False)
-        # 31-59 лет
-        middle = IntegerField(null=False)
-        # 60 лет и старше
-        old = IntegerField(null=False)
+class TopHeaders(BaseModel):
+    header = CharField()
 
-class Section1Keys(BaseModel):
-    # внешний ключ, связывающий строку данных с ключом
-    section1Data = ForeignKeyField(Section1Data, backref='keys', on_delete='CASCADE')
-    # наименование поля
-    name = CharField(null=False)
+
+class SideHeaders(BaseModel):
+    header = CharField()
+
+
+class Data(BaseModel):
+    top_header = ForeignKeyField(TopHeaders, backref='keys', on_delete='CASCADE')
+    side_header = ForeignKeyField(SideHeaders, backref='keys', on_delete='CASCADE')
+    city = ForeignKeyField(City, backref='keys', on_delete='CASCADE')
+    year = ForeignKeyField(Year, backref='keys', on_delete='CASCADE')
+
+    #section = IntegerField()
+    value = IntegerField()
+
