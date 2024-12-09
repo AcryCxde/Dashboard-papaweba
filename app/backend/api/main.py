@@ -19,11 +19,3 @@ app.add_middleware(
 async def root():
     return {"message": "PAPAWEBA V ZDANII SUCHKI, GOTOVTE HTML, GOOOOOOOOOOOOIDA"}
 
-
-@app.post("/upload/")
-async def upload_file(file: UploadFile = File(...)):
-    content = await file.read()
-    # Здесь вызываются ваши методы обработки файла
-    result = f"Файл {file.filename} успешно обработан."
-    return {"message": result}
-
