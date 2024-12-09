@@ -29,9 +29,10 @@ def extract_all_sections(path):
     side_headers = json.loads(side_headers)
     side_headers = list(item.replace('\n', '') for item in side_headers)
 
-    return {'section1':
-                {'side_headers': side_headers,
-                 'top_headers': top_headers,
-                 'data': data,
+    return {
+            'section1': {
+                    'side_headers': side_headers,
+                    'top_headers': top_headers,
+                    'data': data,
                  }
             }

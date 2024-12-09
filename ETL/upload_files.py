@@ -30,9 +30,6 @@ def create_section_1(section, city, year):
     if not is_year_created:
         year_obj.save()
 
-    print(city_obj, is_city_created)
-    print(year_obj, is_year_created)
-
     if is_city_created or is_year_created:
         for side_header_name in section['side_headers']:
             side_header, is_side_created = SideHeaders.get_or_create(header=side_header_name)
@@ -60,5 +57,5 @@ def create_section_1(section, city, year):
 
     return 'Done'
 
-print(upload_files(["D:\My Projects\Github\Dashboard\ЕКАТЕРИНБУРГ 2023.xlsm"]))
-print(upload_files(["D:\My Projects\Github\Dashboard\ЕКАТЕРИНБУРГ 2023.xlsm", "D:\My Projects\Github\Dashboard\НИЖНИЙ_ТАГИЛ 2023.xlsx"]))
+#print(upload_files(["D:\My Projects\Github\Dashboard\ЕКАТЕРИНБУРГ 2023.xlsm"]))
+#print(upload_files(["D:\My Projects\Github\Dashboard\ЕКАТЕРИНБУРГ 2023.xlsm", "D:\My Projects\Github\Dashboard\НИЖНИЙ_ТАГИЛ 2023.xlsx"]))
