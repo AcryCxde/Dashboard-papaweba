@@ -17,5 +17,5 @@ app.add_middleware(
 )
 @app.get("/")
 async def root():
-    return {"message": "PAPAWEBA V ZDANII SUCHKI, GOTOVTE HTML, GOOOOOOOOOOOOIDA"}
+    return {"message": "PAPAWEBA V ZDANII SU4KI, GOTOVTE HTML, GOOOOOOOOOOOOIDA"}
 

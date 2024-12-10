@@ -1,0 +1,56 @@
+/* Стили для контейнера страницы */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f9ff;
+  font-family: Arial, sans-serif;
+}
+
+/* Заголовок */
+.login-container h1 {
+  font-size: 2rem;
+  color: #4a4eb3;
+  margin-bottom: 1rem;
+}
+
+/* Стили для формы входа */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+/* Стили для всех инпутов в форме */
+.login-form input {
+  margin: 8px 0;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Стили для кнопки */
+.login-form button {
+  background-color: #4a4eb3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Стили при наведении на кнопку */
+.login-form button:hover {
+  background-color: #3b3f94;
+}
+
+/* Дополнительный текст */
+.additional-text {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #555;
+}
