@@ -19,3 +19,7 @@ app.add_middleware(
 async def root():
     return {"message": "PAPAWEBA V ZDANII SU4KI, GOTOVTE HTML, GOOOOOOOOOOOOIDA"}
 
+@app.get("/upload_files")
+async def upload_files():
+    x = "D:\Рабочий стол\Примеры\Свердловская область 73 МО 2023\Свердловская область 73 МО 2023\ЕКАТЕРИНБУРГ 2023.xlsm"
+    return upload_files

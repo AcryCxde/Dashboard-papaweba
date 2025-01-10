@@ -11,11 +11,16 @@ if __name__ == '__main__':
         TopHeaders.drop_table()
         City.drop_table()
         Year.drop_table()
+        Users.drop_table()
+        Section.drop_table()
 
         City.create_table()
         Year.create_table()
         SideHeaders.create_table()
         TopHeaders.create_table()
+        Section.create_table()
         Data.create_table()
+        Users.create_table()
+
     except peewee.InternalError as px:
         print(str(px))

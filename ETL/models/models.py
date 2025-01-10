@@ -29,12 +29,20 @@ class SideHeaders(BaseModel):
     header = CharField()
 
 
+class Section(BaseModel):
+    section = IntegerField(unique=True)
+
+
 class Data(BaseModel):
     top_header = ForeignKeyField(TopHeaders, backref='keys', on_delete='CASCADE')
     side_header = ForeignKeyField(SideHeaders, backref='keys', on_delete='CASCADE')
     city = ForeignKeyField(City, backref='keys', on_delete='CASCADE')
     year = ForeignKeyField(Year, backref='keys', on_delete='CASCADE')
 
-    #section = IntegerField()
-    value = IntegerField()
+    section = ForeignKeyField(Section, backref='keys', on_delete='CASCADE')
+    value = CharField()
 
+
+class Users(BaseModel):
+    username = CharField()
+    password_hash = CharField()
