@@ -1,5 +1,5 @@
 import peewee
-from ETL.models.models import *
+from app.ETL.models.models import *
 
 # Создаём таблицы, необходимо выполнить один раз, либо при изменении полей
 if __name__ == '__main__':
