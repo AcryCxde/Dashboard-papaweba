@@ -1,23 +1,65 @@
-import React, { useState } from 'react';
-import '../styles/Login.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Login.css";
+import Cookies from "js-cookie";
 
 function Login({ onLogin }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // Для отображения ошибки
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const savedUsername = Cookies.get("username");
+    const savedPassword = Cookies.get("password");
+    const savedRememberMe = Cookies.get("rememberMe");
+
+    if (savedRememberMe === "true") {
+      setUsername(savedUsername || "");
+      setPassword(savedPassword || "");
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleRememberMeChange = () => {
+    setRememberMe((prev) => !prev);
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username && password) {
+
+    const response = await fetch("http://localhost:8000/login_verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ login: username, password: password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      if (rememberMe) {
+        Cookies.set("username", username, { expires: 7 });
+        Cookies.set("password", password, { expires: 7 });
+        Cookies.set("rememberMe", "true", { expires: 7 });
+      } else {
+        Cookies.remove("username");
+        Cookies.remove("password");
+        Cookies.remove("rememberMe");
+      }
       onLogin(username);
+      navigate("/constructor");
     } else {
-      alert('Введите имя пользователя и пароль');
+      setErrorMessage(data.message || "Ошибка входа. Неверный логин или пароль.");
     }
   };
 
   return (
     <div className="login-container">
-      <h1>Dashboard</h1>
-      <form onSubmit={handleSubmit} className="login-form">
+      <h1>Войти</h1>
+      <form className="login-form" onSubmit={handleLogin}>
         <input
           type="text"
           placeholder="Имя пользователя"
@@ -30,16 +72,17 @@ function Login({ onLogin }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <div className="login-options">
-          <label>
-            <input type="checkbox" /> Запомнить меня
-          </label>
+        <div className="remember-me">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={handleRememberMeChange}
+          />
+          <label>Запомнить меня</label>
         </div>
         <button type="submit">Войти</button>
+        {errorMessage && <p className="error">{errorMessage}</p>}
       </form>
-      <div className="additional-text">
-        <p>Если у вас нет аккаунта, зарегистрируйтесь</p>
-      </div>
     </div>
   );
 }
