@@ -23,11 +23,10 @@ npm install js-cookie
    `npm install`  
    `npm install vite --save-dev`
 
-5. **Запустить Backend**  
-   Перейдите в каталог:  
-   `cd app/backend/api`  
+5. **Запустить Backend**
+
    Запустите сервер:  
-   `uvicorn main:app --reload`
+   `uvicorn app.backend.api.main:app --reload`
 
 6. **Запустить Frontend**  
    Перейдите в каталог:  

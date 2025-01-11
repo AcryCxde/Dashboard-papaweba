@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from peewee import DoesNotExist, IntegrityError
 from passlib.context import CryptContext
 from app.ETL.models.models import Users
+from app.ETL.operations import reset_tables  # Импортируем функцию пересоздания таблиц
 
 app = FastAPI()
 
@@ -42,6 +43,7 @@ def verify_password(entered_password, hashed_password):
 
 @app.post("/login_verify")
 async def login_verify(user: User):
+    """Проверка логина пользователя"""
     try:
         # Ищем пользователя в базе данных по имени пользователя
         db_user = Users.get(Users.username == user.username)
@@ -65,6 +67,7 @@ async def login_verify(user: User):
 # Эндпоинт для создания нового пользователя
 @app.post("/create_user")
 async def create_user(user: User):
+    """Эндпоинт для создания пользователя"""
     try:
         # Хешируем пароль
         hashed_password = hash_password(user.password)
@@ -77,3 +80,12 @@ async def create_user(user: User):
             status_code=400,
             content={"success": False, "message": "Имя пользователя уже занято"}
         )
+
+@app.post("/reset_tables")
+async def reset_tables_endpoint():
+    """Эндпоинт для пересоздания таблиц"""
+    result = reset_tables()
+    if result["success"]:
+        return JSONResponse(status_code=200, content=result)
+    else:
+        return JSONResponse(status_code=500, content=result)

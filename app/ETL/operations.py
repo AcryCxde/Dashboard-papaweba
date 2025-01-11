@@ -1,11 +1,12 @@
 import peewee
 from app.ETL.models.models import *
 
-# Создаём таблицы, необходимо выполнить один раз, либо при изменении полей
-if __name__ == '__main__':
+def reset_tables():
+    """Функция для удаления и создания таблиц заново."""
     try:
         dbhandle.connect()
 
+        # Удаляем таблицы
         Data.drop_table()
         SideHeaders.drop_table()
         TopHeaders.drop_table()
@@ -14,6 +15,7 @@ if __name__ == '__main__':
         Users.drop_table()
         Section.drop_table()
 
+        # Создаём таблицы
         City.create_table()
         Year.create_table()
         SideHeaders.create_table()
@@ -22,5 +24,8 @@ if __name__ == '__main__':
         Data.create_table()
         Users.create_table()
 
+        return {"success": True, "message": "Таблицы успешно пересозданы"}
     except peewee.InternalError as px:
-        print(str(px))
+        return {"success": False, "message": f"Ошибка при пересоздании таблиц: {str(px)}"}
+    finally:
+        dbhandle.close()
