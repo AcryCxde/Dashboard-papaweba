@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import Constructor from './pages/Constructor';
 import Login from './pages/Login';
 import RecentlyCreated from './pages/RecentlyCreated';
@@ -12,30 +12,50 @@ function App() {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
-    const storedUsername = localStorage.getItem('username');
+    const cookieIsLoggedIn = Cookies.get('isLoggedIn') === 'true';
     const cookieUsername = Cookies.get('username');
 
-    if ((storedIsLoggedIn === 'true' && storedUsername) || cookieUsername) {
+    if (cookieIsLoggedIn && cookieUsername) {
       setIsLoggedIn(true);
-      setUsername(storedUsername || cookieUsername);
+      setUsername(cookieUsername);
     }
   }, []);
 
   const handleLogin = (user) => {
     setUsername(user);
     setIsLoggedIn(true);
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('username', user);
-    Cookies.set('username', user, { expires: 7 });
+    Cookies.set('isLoggedIn', 'true', { expires: 7 });  // Сохраняем флаг авторизации
+    Cookies.set('username', user, { expires: 7 });  // Сохраняем имя пользователя в cookies
   };
 
   const handleLogout = () => {
     setUsername('');
     setIsLoggedIn(false);
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('username');
+    Cookies.remove('isLoggedIn');
     Cookies.remove('username');
+  };
+
+  const NavigationMenu = () => {
+    const location = useLocation();  // Для получения текущего пути
+    const links = [
+      { path: '/constructor', label: 'Конструктор' },
+      { path: '/upload-tables', label: 'Загрузить таблицы' },
+      { path: '/recently-created', label: 'Недавно созданные' },
+    ];
+
+    return (
+      <div className="nav-menu">
+        {links.map((link) => (
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -49,19 +69,7 @@ function App() {
         )}
       </div>
 
-      {isLoggedIn && (
-        <div className="nav-panel">
-          <div className="nav-item">
-            <Link to="/constructor">Конструктор</Link>
-          </div>
-          <div className="nav-item">
-            <Link to="/upload-tables">Загрузить таблицы</Link>
-          </div>
-          <div className="nav-item">
-            <Link to="/recently-created">Недавно созданные</Link>
-          </div>
-        </div>
-      )}
+      {isLoggedIn && <NavigationMenu />}
 
       <Routes>
         <Route path="/" element={isLoggedIn ? <Navigate to="/constructor" /> : <Login onLogin={handleLogin} />} />

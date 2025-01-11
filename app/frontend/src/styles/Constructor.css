@@ -1,3 +1,12 @@
+/* Общие стили для всех элементов */
+.page-container {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center; /* Центрируем содержимое */
+}
+
+/* Стили для панели ввода */
 .input-group {
   display: flex;
   gap: 10px;
@@ -25,6 +34,7 @@
   background-color: #355bb2;
 }
 
+/* Стили для списка элементов */
 .elements-list {
   list-style: none;
   padding: 0;
@@ -58,4 +68,70 @@
 
 .remove-button:hover {
   background-color: #b71c1c;
+}
+
+.empty-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Стили для панели выбора диаграмм */
+.checkbox-group {
+  display: flex;
+  flex-direction: column; /* Сделаем чекбоксы колонкой */
+  gap: 10px;
+  margin-top: 20px;
+  width: 220px; /* Ограничим ширину панели */
+  padding: 20px;
+  background-color: #f5f9ff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.checkbox-group input {
+  margin-left: 10px; /* Поставим чекбоксы справа */
+  cursor: pointer;
+}
+
+.checkbox-group input:checked + span {
+  color: #507BE4;
+}
+
+/* Стиль для текста заголовков */
+h1, h2 {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 30px;
+}
+
+/* Стили для контейнера с шагами (центральной панели) */
+.step-container {
+  width: 60%; /* Устанавливаем ширину панели на 60% */
+  padding: 20px;
+  background-color: #f5f9ff;
+  border-radius: 5px;
+  margin: 20px auto; /* Центрируем панель по горизонтали */
+}
+
+/* Обновляем .elements-list для центрирования */
+.elements-list {
+  display: flex;
+  justify-content: center; /* Центрируем элементы в списке */
+  flex-direction: column;
+  gap: 10px;
 }
