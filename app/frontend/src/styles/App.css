@@ -80,7 +80,7 @@ button:hover {
 /* плашки навигации */
 .nav-item {
   list-style: none;
-  background-color: #007bff;
+  background-color: #507BE4;
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
@@ -89,7 +89,7 @@ button:hover {
 }
 
 .nav-item:hover {
-  background-color: #0056b3;
+  background-color: #507BE4;
 }
 
 /* стили для контента */
