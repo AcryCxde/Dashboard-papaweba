@@ -1,4 +1,3 @@
-/* стили для контейнера страницы */
 .login-container {
   display: flex;
   flex-direction: column;
@@ -6,10 +5,9 @@
   align-items: center;
   height: 100vh;
   background-color: #f5f9ff;
-  font-family: Arial, sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
-/* заголовок */
 .login-container h1 {
   font-size: 2rem;
   color: #4a4eb3;
@@ -17,7 +15,6 @@
   text-align: center;
 }
 
-/* стили для формы входа */
 .login-form {
   display: flex;
   flex-direction: column;
@@ -25,11 +22,11 @@
   max-width: 350px;
   padding: 1rem;
   background-color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #507BE4;
 }
 
-/* стили для всех инпутов в форме */
 .login-form input {
   margin: 10px 0;
   padding: 12px;
@@ -39,15 +36,13 @@
   transition: border-color 0.3s ease;
 }
 
-/* фокус на инпуте */
 .login-form input:focus {
-  border-color: #4a4eb3;
+  border-color: #507BE4;
   outline: none;
 }
 
-/* стили для кнопки */
 .login-form button {
-  background-color: #4a4eb3;
+  background-color: #507BE4;
   color: white;
   border: none;
   border-radius: 5px;
@@ -57,34 +52,22 @@
   font-size: 1rem;
 }
 
-/* стили при наведении на кнопку */
 .login-form button:hover {
   background-color: #3b3f94;
 }
 
-/* стили для чекбокса "Запомнить меня" */
 .remember-me {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-/* стили для текста чекбокса */
 .remember-me label {
   font-size: 0.9rem;
   margin-left: 8px;
   color: #555;
 }
 
-/* дополнительный текст */
-.additional-text {
-  margin-top: 20px;
-  font-size: 0.9rem;
-  color: #555;
-  text-align: center;
-}
-
-/* стили для ошибки */
 .error {
   color: red;
   font-size: 0.9rem;

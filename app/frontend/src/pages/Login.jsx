@@ -7,7 +7,7 @@ function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // Для отображения ошибки
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,19 +29,24 @@ function Login({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (!username || !password) {
+      setErrorMessage("Пожалуйста, заполните все поля.");
+      return;
+    }
+
     const response = await fetch("http://localhost:8000/login_verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username: username, password: password, rememberMe: rememberMe }),
+      body: JSON.stringify({ username, password, rememberMe }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
       if (rememberMe) {
-        Cookies.set("username", username, { expires: 7 });
+        Cookies.set("username", username, { expires: 7 });  // Устанавливаем куки для имени
         Cookies.set("password", password, { expires: 7 });
         Cookies.set("rememberMe", "true", { expires: 7 });
       } else {
@@ -58,7 +63,7 @@ function Login({ onLogin }) {
 
   return (
     <div className="login-container">
-      <h1>Войти</h1>
+      <h1>Dashboard</h1>
       <form className="login-form" onSubmit={handleLogin}>
         <input
           type="text"

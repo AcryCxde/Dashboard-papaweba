@@ -1,121 +1,69 @@
-/* стили для контейнера страницы */
-.page-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f5f9ff;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
-/* стили для хеддера */
+* {
+  box-sizing: inherit;
+}
+
 .header {
+  width: 100%;
+  height: 120px;
+  background-color: #507BE4;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background-color: #003366;
-}
-
-/* стили для "Dashboard" в хеддере */
-.dashboard-title {
-  font-size: 2rem;
-  font-weight: bold;
+  padding: 0 80px;
   color: white;
-  flex-grow: 1;
-  text-align: left;
 }
 
-/* плашка входа */
-.login-prompt {
-  background-color: #4a4eb3;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-left: auto;
-}
-
-.login-prompt:hover {
-  background-color: #3b3f94;
-}
-
-/* блок с данными пользователя */
-.user-info {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.user-info span {
-  font-size: 1rem;
-  margin-right: 10px;
-}
-
-/* кнопка выхода */
-button {
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* панель навигации */
-.nav-panel {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-}
-
-/* плашки навигации */
-.nav-item {
-  list-style: none;
-  background-color: #507BE4;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.nav-item:hover {
-  background-color: #507BE4;
-}
-
-/* стили для контента */
-.page-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 600px;
-}
-
-.page-content p {
-  font-size: 1.1rem;
-  color: #333;
-}
-
-/* стили для ссылки "Dashboard" */
 .dashboard-link {
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   color: white;
   text-decoration: none;
   font-weight: bold;
-  margin-left: 20px;
 }
 
 .dashboard-link:hover {
   color: #e6f0ff;
+}
+
+.login-prompt {
+  font-size: 1rem;
+  color: white;
+}
+
+.nav-panel {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  background-color: #507BE4;
+  padding: 10px 0;
+}
+
+.nav-item {
+  list-style: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  background-color: #355bb2;
+  font-size: 1rem;
+}
+
+.nav-item a {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background-color: #2a47a0;
+}
+
+.page-container {
+  padding: 20px;
 }
