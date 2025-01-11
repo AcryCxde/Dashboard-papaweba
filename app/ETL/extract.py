@@ -20,6 +20,8 @@ def extract_section(path, section_number):
     else:
         top_headers = df[2:6].to_json(orient='values', force_ascii=False)
         data = df[7:].drop([0, 1], axis=1)
+        if section_number == 5:
+            data = data.iloc[:, 2:15]
         side_headers = df[0][7:]
     top_headers = json.loads(top_headers)
     transposed = list(zip(*top_headers))
@@ -35,11 +37,13 @@ def extract_section(path, section_number):
             None
         )
         cleaned_headers.append(header)
-    cleaned_headers.pop(1)
+    cleaned_headers.pop(0)
+    cleaned_headers.pop(0)
     top_headers = cleaned_headers
 
     data = data.to_json(orient='values', force_ascii=False)
     data = json.loads(data)
+
     data = [sublist for sublist in data if all(item is not None for item in sublist)]
 
     side_headers = side_headers.to_json(orient='values', force_ascii=False)
