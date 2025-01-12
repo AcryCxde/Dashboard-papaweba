@@ -39,7 +39,7 @@ function App() {
     const location = useLocation();  // Для получения текущего пути
     const links = [
       { path: '/constructor', label: 'Конструктор' },
-      { path: '/upload-tables', label: 'Загрузить таблицы' },
+      { path: '/upload-tables', label: 'Загрузка таблиц' },
       { path: '/recently-created', label: 'Недавно созданные' },
     ];
 
