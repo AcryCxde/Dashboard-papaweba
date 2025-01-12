@@ -13,7 +13,8 @@ app = FastAPI()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 origins = [
-    "http://localhost:5173",  # Убедитесь, что ваше приложение работает на этом порту
+    "http://localhost:5173",
+    "http://127.0.0.1:5173", # Убедитесь, что ваше приложение работает на этом порту
 ]
 
 app.add_middleware(
@@ -97,7 +98,8 @@ class ChartRequest(BaseModel):
     section: str
     topParam: str
     sideParam: str
-    yearCity: str
+    year: str
+    city: str
 
 
 # Эндпоинт для обработки данных

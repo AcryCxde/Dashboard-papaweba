@@ -23,32 +23,38 @@ function Constructor() {
   // Загрузка данных из API
   useEffect(() => {
     const fetchDropdownData = async () => {
-      try {
-        const [sectionsRes, topParamsRes, sideParamsRes, yearsRes, citiesRes] = await Promise.all([
-          fetch("http://127.0.0.1:8000/dropdown-options/section"),
-          fetch("http://127.0.0.1:8000/dropdown-options/topParam"),
-          fetch("http://127.0.0.1:8000/dropdown-options/sideParam"),
-          fetch("http://127.0.0.1:8000/dropdown-options/year"),
-          fetch("http://127.0.0.1:8000/dropdown-options/city"),
-        ]);
+  try {
+    const [sectionsRes, topParamsRes, sideParamsRes, yearsRes, citiesRes] = await Promise.all([
+      fetch("http://127.0.0.1:8000/dropdown-options/section"),
+      fetch("http://127.0.0.1:8000/dropdown-options/topParam"),
+      fetch("http://127.0.0.1:8000/dropdown-options/sideParam"),
+      fetch("http://127.0.0.1:8000/dropdown-options/year"),
+      fetch("http://127.0.0.1:8000/dropdown-options/city"),
+    ]);
 
-        const sections = await sectionsRes.json();
-        const topParams = await topParamsRes.json();
-        const sideParams = await sideParamsRes.json();
-        const years = await yearsRes.json();
-        const cities = await citiesRes.json();
+    if (!sectionsRes.ok) throw new Error('Ошибка при загрузке данных для секций');
+    if (!topParamsRes.ok) throw new Error('Ошибка при загрузке данных для параметров');
+    if (!sideParamsRes.ok) throw new Error('Ошибка при загрузке данных для боковых параметров');
+    if (!yearsRes.ok) throw new Error('Ошибка при загрузке данных для годов');
+    if (!citiesRes.ok) throw new Error('Ошибка при загрузке данных для городов');
 
-        setDropdownData({
-          sections,
-          topParams,
-          sideParams,
-          years,
-          cities,
-        });
-      } catch (error) {
-        console.error("Ошибка при загрузке данных для выпадающих списков:", error);
-      }
-    };
+    const sections = await sectionsRes.json();
+    const topParams = await topParamsRes.json();
+    const sideParams = await sideParamsRes.json();
+    const years = await yearsRes.json();
+    const cities = await citiesRes.json();
+
+    setDropdownData({
+      sections: sections.data,
+      topParams: topParams.data,
+      sideParams: sideParams.data,
+      years: years.data,
+      cities: cities.data
+    });
+  } catch (error) {
+    console.error("Ошибка при загрузке данных для выпадающих списков:", error);
+  }
+};
 
     fetchDropdownData();
   }, []);
