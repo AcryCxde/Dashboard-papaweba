@@ -1,137 +1,114 @@
-/* Общие стили для всех элементов */
-.page-container {
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  justify-content: center; /* Центрируем содержимое */
-}
-
-/* Стили для панели ввода */
-.input-group {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.input-group input {
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  flex-grow: 1;
-}
-
-.input-group button {
-  padding: 10px 20px;
-  background-color: #507BE4;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.input-group button:hover {
-  background-color: #355bb2;
-}
-
-/* Стили для списка элементов */
-.elements-list {
-  list-style: none;
-  padding: 0;
+body {
   margin: 0;
+  padding: 0;
+  background-color: white;
 }
 
-.element-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #f5f9ff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.element-item span {
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.remove-button {
-  background-color: #e63946;
-  color: white;
-  border: none;
-  border-radius: 5px;
+.diagram-choose-container {
   padding: 5px 10px;
-  cursor: pointer;
 }
 
-.remove-button:hover {
-  background-color: #b71c1c;
+.text {
+  margin: 3px 0;
 }
 
-.empty-message {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin-top: 20px;
-  font-style: italic;
-}
-
-/* Стили для панели выбора диаграмм */
-.checkbox-group {
-  display: flex;
-  flex-direction: column; /* Сделаем чекбоксы колонкой */
-  gap: 10px;
-  margin-top: 20px;
-  width: 220px; /* Ограничим ширину панели */
+.dashboard {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
   padding: 20px;
-  background-color: #f5f9ff;
+}
+
+.dashboard-main {
+  width: 80%; /* Устанавливаем ширину 80% */
+  max-width: 1000px; /* Максимальная ширина */
+  margin: 0 auto; /* Центрируем блок */
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.step {
+  margin-bottom: 100px;
+  border: 10px;
+}
+
+.chart-options {
+  background-color: #E5EBF9;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.checkbox-group label {
+  padding: 20px 10px 0 10px;
   display: flex;
-  align-items: center;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.checkbox-group input {
-  margin-left: 10px; /* Поставим чекбоксы справа */
-  cursor: pointer;
-}
-
-.checkbox-group input:checked + span {
-  color: #507BE4;
-}
-
-/* Стиль для текста заголовков */
-h1, h2 {
-  color: #333;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-h2 {
-  font-size: 1.5rem;
-  margin-top: 30px;
-}
-
-/* Стили для контейнера с шагами (центральной панели) */
-.step-container {
-  width: 60%; /* Устанавливаем ширину панели на 60% */
-  padding: 20px;
-  background-color: #f5f9ff;
-  border-radius: 5px;
-  margin: 20px auto; /* Центрируем панель по горизонтали */
-}
-
-/* Обновляем .elements-list для центрирования */
-.elements-list {
-  display: flex;
-  justify-content: center; /* Центрируем элементы в списке */
   flex-direction: column;
   gap: 10px;
+}
+
+/* Общее оформление выбора типа диаграммы*/
+.chart-option {
+  margin: 0 15px 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Распределение между началом и концом */
+}
+
+.dropdown {
+  font-family: "Montserrat", serif;
+  font-size: 16px;
+  font-weight: 600;
+  width: 40%;
+  align: left;
+  padding: 10px;
+  background-color: #E5EBF9;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.create-chart-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #2d6cdf;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.chart-option input[type="radio"] {
+  display: none; /* Скрыть стандартный input */
+}
+
+.chart-option:hover {
+  border-color: #2d6cdf;
+  cursor: pointer;
+}
+
+/* Кастомный радиокруг */
+.custom-radio {
+  width: 23px;
+  height: 23px;
+  border: 2px solid #2d6cdf;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto; /* Перемещаем вправо */
+  position: relative;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Отображение галочки при выборе */
+.custom-radio::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #2d6cdf;
+  border-radius: 50%;
+  display: none;
+}
+
+input[type="radio"]:checked + .custom-radio::after {
+  display: block;
 }

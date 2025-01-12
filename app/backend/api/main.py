@@ -89,3 +89,44 @@ async def reset_tables_endpoint():
         return JSONResponse(status_code=200, content=result)
     else:
         return JSONResponse(status_code=500, content=result)
+
+
+# Модель данных для валидации входящего тела запроса
+class ChartRequest(BaseModel):
+    chartType: str
+    section: str
+    topParam: str
+    sideParam: str
+    yearCity: str
+
+
+# Эндпоинт для обработки данных
+@app.post("/create-chart")
+async def create_chart(data: ChartRequest):
+    # Вывод данных в консоль
+    print("Полученные данные для создания диаграммы:")
+    print(data.dict())
+
+    # Возвращаем успешный ответ
+    return {"message": "Данные успешно получены", "data": data.dict()}
+
+
+@app.get("/dropdown-options/section")
+async def get_section():
+    return {"data": ['Раздел 1']}
+
+@app.get("/dropdown-options/topParam")
+async def get_top_param():
+    return {"data": ['Женщины']}
+
+@app.get("/dropdown-options/sideParam")
+async def get_side_param():
+    return {"data": ['Красивые']}
+
+@app.get("/dropdown-options/year")
+async def get_year():
+    return {"data": ['2019']}
+
+@app.get("/dropdown-options/city")
+async def get_city():
+    return {"data": ['Новокольцово']}
