@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from peewee import DoesNotExist, IntegrityError
 from passlib.context import CryptContext
-from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders
+from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders, Year, City
 from app.ETL.operations import reset_tables  # Импортируем функцию пересоздания таблиц
 
 app = FastAPI()
@@ -149,8 +149,20 @@ async def get_top_param(section_number: int):
 
 @app.get("/dropdown-options/year")
 async def get_year():
-    return {"data": ['2019']}
+    query = Year.select(Year)
+    results = query.dicts()  # Преобразуем результаты в словари
+    data = [result['year'] for result in results]
+
+    if not data:
+        raise HTTPException(status_code=404, detail="No data found")
+    return {"data": data}
 
 @app.get("/dropdown-options/city")
 async def get_city():
-    return {"data": ['Новокольцово']}
+    query = City.select(City)
+    results = query.dicts()  # Преобразуем результаты в словари
+    data = [result['city'] for result in results]
+
+    if not data:
+        raise HTTPException(status_code=404, detail="No data found")
+    return {"data": data}
