@@ -92,17 +92,18 @@ async def reset_tables_endpoint():
         return JSONResponse(status_code=500, content=result)
 
 
+from typing import Union, List
+from pydantic import BaseModel
+
 # Модель данных для валидации входящего тела запроса
 class ChartRequest(BaseModel):
     chartType: str
     section: str
-    topParam: str
-    sideParam: str
-    year: str
-    city: str
+    topParam: Union[str, List[str]]  # Можем получать как строку, так и список строк
+    sideParam: Union[str, List[str]]  # То же для бокового параметра
+    year: Union[str, List[str]]       # То же для года
+    city: Union[str, List[str]]       # То же для города
 
-
-# Эндпоинт для обработки данных
 @app.post("/create-chart")
 async def create_chart(data: ChartRequest):
     # Вывод данных в консоль
@@ -111,6 +112,8 @@ async def create_chart(data: ChartRequest):
 
     # Возвращаем успешный ответ
     return {"message": "Данные успешно получены", "data": data.dict()}
+
+
 
 
 @app.get("/dropdown-options/section")

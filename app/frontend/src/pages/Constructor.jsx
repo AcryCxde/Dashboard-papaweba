@@ -80,6 +80,36 @@ function Constructor() {
     if (key === "section" && value) fetchParams(value);
   };
 
+    const saveToAPI = async () => {
+  const data = {
+    chartType: selectedChart,
+    ...selectedOptions,
+  };
+
+  // Выводим данные для проверки в консоль
+  console.log("Отправляемые данные:", JSON.stringify(data, null, 2));
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/create-chart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Ошибка при сохранении данных");
+    }
+
+    const result = await response.json();
+    console.log("Диаграмма успешно создана:", result);
+  } catch (error) {
+    console.error("Ошибка при запросе:", error);
+  }
+};
+
+
   return (
     <div className="dashboard">
       <main className="dashboard-main">
@@ -131,7 +161,6 @@ function Constructor() {
           </div>
         </section>
 
-        {/* Остальные этапы */}
         {/* Этап 2: Выбор разделов */}
         <section className="step step-2">
           <h2>Этап 2. Выбрать разделы</h2>
@@ -307,6 +336,9 @@ function Constructor() {
             </select>
           )}
         </section>
+        <button className="create-chart-button" onClick={saveToAPI}>
+          Создать график
+        </button>
       </main>
     </div>
   );
