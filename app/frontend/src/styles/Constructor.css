@@ -64,13 +64,14 @@ body {
 
 .create-chart-button {
   display: block;
-  width: 100%;
+  width: 300px;
+  margin: auto;
   padding: 15px;
   background-color: #2d6cdf;
   color: white;
   font-size: 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
 

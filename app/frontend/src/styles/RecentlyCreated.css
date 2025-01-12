@@ -1,0 +1,47 @@
+.page-container {
+  font-family: "Montserrat", serif;
+  align-items: center;
+  background-color: white;
+  overflow-x: auto;
+}
+
+.recent {
+  font-size: 36px;
+  font-weight: 600;
+  margin: 40px auto;
+  text-align: center;
+  color: #2d6cdf;
+}
+
+.custom-table {
+  margin: 20px;
+  width: 70%;
+  margin: auto;
+  border-collapse: collapse;
+}
+
+.custom-table th, .custom-table td {
+  border: 2px solid #507BE4;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.custom-table th {
+  background-color: #E5EBF9;
+  color: #507BE4;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.custom-table td {
+  background-color: #ffffff;
+  word-wrap: break-word; /* Разрешает перенос слов */
+  word-break: break-word; /* Перенос слов, если они длинные */
+  white-space: normal; /* Позволяет перенос строк */
+  max-width: 200px; /* Устанавливает максимальную ширину ячеек */
+  overflow-wrap: anywhere; /* Дополнительная опция для современных браузеров */
+}
+
+.custom-table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
