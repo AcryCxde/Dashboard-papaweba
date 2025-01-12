@@ -113,3 +113,66 @@ body {
 input[type="radio"]:checked + .custom-radio::after {
   display: block;
 }
+
+.checkbox-group {
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Отступ между строками */
+
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Отступ между чекбоксом и текстом */
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Тонкая полупрозрачная линия между элементами */
+}
+
+.checkbox-option input[type="checkbox"] {
+  /* Убираем стандартный стиль чекбокса */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Размер чекбокса */
+  width: 20px;  /* Строгий размер */
+  height: 20px; /* Строгий размер */
+  min-width: 20px;
+  min-height: 20px;
+  border: 2px solid #507BE4; /* Красная обводка */
+  border-radius: 2px; /* Скругленные углы */
+  background-color: white; /* Фон внутри чекбокса */
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.checkbox-option input[type="checkbox"]:checked {
+  background-color: white;
+  border-color: #507BE4;
+}
+
+.checkbox-option input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  display: none;
+  width: 10px;
+  height: 10px;
+  background-color: #507BE4; /* Цвет "галочки" */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+}
+
+.checkbox-option input[type="checkbox"]:checked::after {
+  display: block; /* Показываем "галочку" при выборе */
+}
+
+.checkbox-option label {
+  cursor: pointer;
+  font-size: 18px;
+}
