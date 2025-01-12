@@ -29,7 +29,7 @@ body {
 }
 
 .step {
-  margin-bottom: 100px;
+  margin-bottom: 40px;
   border: 10px;
 }
 
@@ -112,4 +112,24 @@ body {
 
 input[type="radio"]:checked + .custom-radio::after {
   display: block;
+}
+
+.multi-select-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.multi-select-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #e5ebf9;
+}
+
+.multi-select-item input[type="checkbox"] {
+  margin: 0;
 }

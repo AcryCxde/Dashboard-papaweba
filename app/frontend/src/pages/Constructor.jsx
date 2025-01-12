@@ -20,44 +20,70 @@ function Constructor() {
     cities: [],
   });
 
-  // Загрузка данных из API
+  // Загрузка данных для секций и других параметров
   useEffect(() => {
-    const fetchDropdownData = async () => {
-  try {
-    const [sectionsRes, topParamsRes, sideParamsRes, yearsRes, citiesRes] = await Promise.all([
-      fetch("http://127.0.0.1:8000/dropdown-options/section"),
-      fetch("http://127.0.0.1:8000/dropdown-options/topParam"),
-      fetch("http://127.0.0.1:8000/dropdown-options/sideParam"),
-      fetch("http://127.0.0.1:8000/dropdown-options/year"),
-      fetch("http://127.0.0.1:8000/dropdown-options/city"),
-    ]);
+  const fetchSections = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/dropdown-options/section");
+      if (!response.ok) throw new Error("Ошибка при загрузке секций");
+      const sections = await response.json();
+      setDropdownData((prev) => ({ ...prev, sections: sections.data }));
+    } catch (error) {
+      console.error("Ошибка при загрузке секций:", error);
+    }
+  };
 
-    if (!sectionsRes.ok) throw new Error('Ошибка при загрузке данных для секций');
-    if (!topParamsRes.ok) throw new Error('Ошибка при загрузке данных для параметров');
-    if (!sideParamsRes.ok) throw new Error('Ошибка при загрузке данных для боковых параметров');
-    if (!yearsRes.ok) throw new Error('Ошибка при загрузке данных для годов');
-    if (!citiesRes.ok) throw new Error('Ошибка при загрузке данных для городов');
+  const fetchYears = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/dropdown-options/year");
+      if (!response.ok) throw new Error("Ошибка при загрузке годов");
+      const years = await response.json();
+      setDropdownData((prev) => ({ ...prev, years: years.data }));
+    } catch (error) {
+      console.error("Ошибка при загрузке годов:", error);
+    }
+  };
 
-    const sections = await sectionsRes.json();
-    const topParams = await topParamsRes.json();
-    const sideParams = await sideParamsRes.json();
-    const years = await yearsRes.json();
-    const cities = await citiesRes.json();
+  const fetchCities = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/dropdown-options/city");
+      if (!response.ok) throw new Error("Ошибка при загрузке городов");
+      const cities = await response.json();
+      setDropdownData((prev) => ({ ...prev, cities: cities.data }));
+    } catch (error) {
+      console.error("Ошибка при загрузке городов:", error);
+    }
+  };
 
-    setDropdownData({
-      sections: sections.data,
-      topParams: topParams.data,
-      sideParams: sideParams.data,
-      years: years.data,
-      cities: cities.data
-    });
-  } catch (error) {
-    console.error("Ошибка при загрузке данных для выпадающих списков:", error);
-  }
-};
+  // Загрузка данных
+  fetchSections();
+  fetchYears();
+  fetchCities();
+}, []);
 
-    fetchDropdownData();
-  }, []);
+  // Загрузка данных для верхнего и бокового параметра
+  const fetchParams = async (sectionId) => {
+    try {
+      const [topParamsRes, sideParamsRes] = await Promise.all([
+        fetch("http://127.0.0.1:8000/dropdown-options/topParam/${sectionId}"),
+        fetch("http://127.0.0.1:8000/dropdown-options/sideParam/${sectionId}"),
+      ]);
+
+      if (!topParamsRes.ok) throw new Error("Ошибка при загрузке верхних параметров");
+      if (!sideParamsRes.ok) throw new Error("Ошибка при загрузке боковых параметров");
+
+      const topParams = await topParamsRes.json();
+      const sideParams = await sideParamsRes.json();
+
+      setDropdownData((prev) => ({
+        ...prev,
+        topParams: topParams.data,
+        sideParams: sideParams.data,
+      }));
+    } catch (error) {
+      console.error("Ошибка при загрузке параметров:", error);
+    }
+  };
 
   // Функция для изменения типа диаграммы
   const handleChartTypeChange = (chartType) => {
@@ -70,6 +96,11 @@ function Constructor() {
       ...prev,
       [key]: value,
     }));
+
+    // Если выбрана секция, загружаем параметры
+    if (key === "section" && value) {
+      fetchParams(value);
+    }
   };
 
   // Функция для сохранения данных в API
@@ -156,7 +187,7 @@ function Constructor() {
           >
             <option value="">Выберите раздел</option>
             {dropdownData.sections.map((section, idx) => (
-              <option key={idx} value={section}>
+              <option key={idx} value={idx + 1}> {/* ID раздела */}
                 {section}
               </option>
             ))}
@@ -169,6 +200,7 @@ function Constructor() {
           <select
             className="dropdown"
             onChange={(e) => handleOptionChange("topParam", e.target.value)}
+            disabled={!selectedOptions.section}
           >
             <option value="">Выберите параметр</option>
             {dropdownData.topParams.map((param, idx) => (
@@ -185,6 +217,7 @@ function Constructor() {
           <select
             className="dropdown"
             onChange={(e) => handleOptionChange("sideParam", e.target.value)}
+            disabled={!selectedOptions.section}
           >
             <option value="">Выберите параметр</option>
             {dropdownData.sideParams.map((param, idx) => (
@@ -194,13 +227,13 @@ function Constructor() {
             ))}
           </select>
         </section>
-
         {/* Этап 5: Выбор года */}
         <section className="step step-5">
           <h2>Этап 5. Выбор года</h2>
           <select
             className="dropdown"
             onChange={(e) => handleOptionChange("year", e.target.value)}
+            disabled={!selectedOptions.section}
           >
             <option value="">Выберите год</option>
             {dropdownData.years.map((year, idx) => (
@@ -217,6 +250,7 @@ function Constructor() {
           <select
             className="dropdown"
             onChange={(e) => handleOptionChange("city", e.target.value)}
+            disabled={!selectedOptions.section}
           >
             <option value="">Выберите город</option>
             {dropdownData.cities.map((city, idx) => (
