@@ -18,9 +18,9 @@ def reset_tables():
         # Создаём таблицы
         City.create_table()
         Year.create_table()
+        Section.create_table()
         SideHeaders.create_table()
         TopHeaders.create_table()
-        Section.create_table()
         Data.create_table()
         Users.create_table()
 

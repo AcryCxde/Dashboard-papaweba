@@ -20,17 +20,18 @@ class City(BaseModel):
 class Year(BaseModel):
     year = IntegerField(unique=True)
 
+class Section(BaseModel):
+    section = IntegerField(unique=True)
+
 
 class TopHeaders(BaseModel):
     header = CharField()
+    section = ForeignKeyField(Section, backref='keys', on_delete='CASCADE')
 
 
 class SideHeaders(BaseModel):
     header = CharField()
-
-
-class Section(BaseModel):
-    section = IntegerField(unique=True)
+    section = ForeignKeyField(Section, backref='keys', on_delete='CASCADE')
 
 
 class Data(BaseModel):

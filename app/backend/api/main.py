@@ -1,10 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from peewee import DoesNotExist, IntegrityError
 from passlib.context import CryptContext
-from app.ETL.models.models import Users
+from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders
 from app.ETL.operations import reset_tables  # Импортируем функцию пересоздания таблиц
 
 app = FastAPI()
@@ -82,7 +82,7 @@ async def create_user(user: User):
             content={"success": False, "message": "Имя пользователя уже занято"}
         )
 
-@app.post("/reset_tables")
+@app.get("/reset_tables")
 async def reset_tables_endpoint():
     """Эндпоинт для пересоздания таблиц"""
     result = reset_tables()
@@ -115,15 +115,37 @@ async def create_chart(data: ChartRequest):
 
 @app.get("/dropdown-options/section")
 async def get_section():
-    return {"data": ['Раздел 1']}
+    return {"data": [
+        'Раздел 1. Кадры и человек',
+        'Раздел 2. Физкультурно-оздоровительная работа',
+        'Раздел 3. Спортивная инфраструктура',
+        'Раздел 4. Финансирование физической культуры и спорта'
+        'Раздел 5. Развитие видов спорта и двигательной активности',
+        'Социально ориентированные некоммерческие организации (СОНКО)'
+    ]}
 
-@app.get("/dropdown-options/topParam")
-async def get_top_param():
-    return {"data": ['Женщины']}
+@app.get("/dropdown-options/sideParam/{section_number}")
+async def get_side_param(section_number: int):
+    query = SideHeaders.select(SideHeaders.header).where(SideHeaders.section == section_number)
+    results = query.dicts()  # Преобразуем результаты в словари
+    data = [result['header'] for result in results]  # Извлекаем поле `header`
 
-@app.get("/dropdown-options/sideParam")
-async def get_side_param():
-    return {"data": ['Красивые']}
+    if not data:
+        raise HTTPException(status_code=404, detail="No data found")
+
+    return {"data": data}
+
+@app.get("/dropdown-options/topParam/{section_number}")
+async def get_top_param(section_number: int):
+    query = TopHeaders.select(TopHeaders.header).where(TopHeaders.section == section_number)
+    results = query.dicts()  # Преобразуем результаты в словари
+    data = [result['header'] for result in results]  # Извлекаем поле `header`
+
+    if not data:
+        raise HTTPException(status_code=404, detail="No data found")
+
+    return {"data": data}
+
 
 @app.get("/dropdown-options/year")
 async def get_year():

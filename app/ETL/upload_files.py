@@ -17,6 +17,23 @@ def get_or_create_cached(model, cache, **kwargs):
     return cache[key]
 
 
+def get_or_create_sideheader(cache, header, section):
+    key = (header, section)  # Формируем ключ для кэша
+    if key not in cache:
+        # Создаем объект, если его нет в кэше
+        obj, created = SideHeaders.get_or_create(header=header, section=section)
+        cache[key] = obj  # Сохраняем в кэш
+    return cache[key]
+
+def get_or_create_topheader(cache, header, section):
+    key = (header, section)  # Формируем ключ для кэша
+    if key not in cache:
+        # Создаем объект, если его нет в кэше
+        obj, created = TopHeaders.get_or_create(header=header, section=section)
+        cache[key] = obj  # Сохраняем в кэш
+    return cache[key]
+
+
 def upload_files(files: list):
     for file in files:
         # Определение города и года из имени файла
@@ -37,11 +54,12 @@ def create_section(section, city, year, section_number):
 
     # Кэширование заголовков строк и столбцов
     side_headers_list = [
-        get_or_create_cached(SideHeaders, side_headers_cache, header=name)
+        get_or_create_sideheader(side_headers_cache, header=name, section=section_number)
         for name in section['side_headers']
     ]
+
     top_headers_list = [
-        get_or_create_cached(TopHeaders, top_headers_cache, header=name)
+        get_or_create_topheader(top_headers_cache, header=name, section=section_number)
         for name in section['top_headers']
     ]
 
