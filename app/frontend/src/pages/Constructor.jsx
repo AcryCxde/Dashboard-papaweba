@@ -63,27 +63,28 @@ function Constructor() {
 
   // Загрузка данных для верхнего и бокового параметра
   const fetchParams = async (sectionId) => {
-    try {
-      const [topParamsRes, sideParamsRes] = await Promise.all([
-        fetch("http://127.0.0.1:8000/dropdown-options/topParam/${sectionId}"),
-        fetch("http://127.0.0.1:8000/dropdown-options/sideParam/${sectionId}"),
-      ]);
+  try {
+    const [topParamsRes, sideParamsRes] = await Promise.all([
+      fetch(`http://127.0.0.1:8000/dropdown-options/topParam/${sectionId}`),
+      fetch(`http://127.0.0.1:8000/dropdown-options/sideParam/${sectionId}`),
+    ]);
 
-      if (!topParamsRes.ok) throw new Error("Ошибка при загрузке верхних параметров");
-      if (!sideParamsRes.ok) throw new Error("Ошибка при загрузке боковых параметров");
+    if (!topParamsRes.ok) throw new Error("Ошибка при загрузке верхних параметров");
+    if (!sideParamsRes.ok) throw new Error("Ошибка при загрузке боковых параметров");
 
-      const topParams = await topParamsRes.json();
-      const sideParams = await sideParamsRes.json();
+    const topParams = await topParamsRes.json();
+    const sideParams = await sideParamsRes.json();
 
-      setDropdownData((prev) => ({
-        ...prev,
-        topParams: topParams.data,
-        sideParams: sideParams.data,
-      }));
-    } catch (error) {
-      console.error("Ошибка при загрузке параметров:", error);
-    }
-  };
+    setDropdownData((prev) => ({
+      ...prev,
+      topParams: topParams.data,
+      sideParams: sideParams.data,
+    }));
+  } catch (error) {
+    console.error("Ошибка при загрузке параметров:", error);
+  }
+};
+
 
   // Функция для изменения типа диаграммы
   const handleChartTypeChange = (chartType) => {
