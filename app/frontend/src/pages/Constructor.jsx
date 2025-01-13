@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Constructor.css";
+import { Pie, Line, Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+} from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement);
 
 function Constructor() {
   const [selectedChart, setSelectedChart] = useState(""); // Для типа диаграммы
@@ -80,34 +94,48 @@ function Constructor() {
     if (key === "section" && value) fetchParams(value);
   };
 
-    const saveToAPI = async () => {
-  const data = {
-    chartType: selectedChart,
-    ...selectedOptions,
+  const [chartData, setChartData] = useState(null); // Данные для построения графика
+
+  const saveToAPI = async () => {
+    const data = {
+      chartType: selectedChart,
+      ...selectedOptions,
+    };
+
+    console.log("Отправляемые данные:", JSON.stringify(data, null, 2));
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/create-chart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Ошибка при сохранении данных");
+
+      const result = await response.json();
+      console.log("Диаграмма успешно создана:", result);
+
+      // Здесь обновляем данные графика
+      setChartData({
+        labels: result.data.labels, // Метки осей (предполагаем, что API возвращает их)
+        datasets: [
+          {
+            label: "Данные диаграммы",
+            data: result.data.values, // Значения диаграммы
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"], // Цвета для круговой диаграммы
+            borderColor: "#ddd", // Цвет границ
+            borderWidth: 1,
+          },
+        ],
+      });
+    } catch (error) {
+      console.error("Ошибка при запросе:", error);
+    }
   };
 
-  // Выводим данные для проверки в консоль
-  console.log("Отправляемые данные:", JSON.stringify(data, null, 2));
-
-  try {
-    const response = await fetch("http://127.0.0.1:8000/create-chart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Ошибка при сохранении данных");
-    }
-
-    const result = await response.json();
-    console.log("Диаграмма успешно создана:", result);
-  } catch (error) {
-    console.error("Ошибка при запросе:", error);
-  }
-};
 
 
   return (
@@ -180,19 +208,6 @@ function Constructor() {
         {/* Этап 3: Выбор верхнего параметра */}
         <section className="step step-3">
           <h2>Этап 3. Выбор верхнего параметра</h2>
-          {selectedChart === "Круговая диаграмма" ? (
-            <select
-              className="dropdown"
-              onChange={(e) => handleOptionChange("topParam", e.target.value)}
-            >
-              <option value="">Выберите параметр</option>
-              {dropdownData.topParams.map((param, idx) => (
-                <option key={idx} value={param}>
-                  {param}
-                </option>
-              ))}
-            </select>
-          ) : (
             <div className="checkbox-group">
               {dropdownData.topParams.map((param, idx) => (
                 <label key={idx} className="checkbox-option">
@@ -214,25 +229,11 @@ function Constructor() {
                 </label>
               ))}
             </div>
-          )}
         </section>
 
         {/* Этап 4: Выбор бокового параметра */}
         <section className="step step-4">
           <h2>Этап 4. Выбор бокового параметра</h2>
-          {selectedChart === "Круговая диаграмма" ? (
-            <select
-              className="dropdown"
-              onChange={(e) => handleOptionChange("sideParam", e.target.value)}
-            >
-              <option value="">Выберите параметр</option>
-              {dropdownData.sideParams.map((param, idx) => (
-                <option key={idx} value={param}>
-                  {param}
-                </option>
-              ))}
-            </select>
-          ) : (
             <div className="checkbox-group">
               {dropdownData.sideParams.map((param, idx) => (
                 <label key={idx} className="checkbox-option">
@@ -254,13 +255,11 @@ function Constructor() {
                 </label>
               ))}
             </div>
-          )}
         </section>
 
         {/* Этап 5: Выбор года */}
         <section className="step step-5">
           <h2>Этап 5. Выбор года</h2>
-          {selectedChart === "Круговая диаграмма" ? (
             <div className="checkbox-group">
               {dropdownData.years.map((year, idx) => (
                 <label key={idx} className="checkbox-option">
@@ -281,25 +280,11 @@ function Constructor() {
                 </label>
               ))}
             </div>
-          ) : (
-            <select
-              className="dropdown"
-              onChange={(e) => handleOptionChange("year", e.target.value)}
-            >
-              <option value="">Выберите год</option>
-              {dropdownData.years.map((year, idx) => (
-                <option key={idx} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          )}
         </section>
 
         {/* Этап 6: Выбор города */}
         <section className="step step-6">
           <h2>Этап 6. Выбор города</h2>
-          {selectedChart === "Круговая диаграмма" ? (
             <div className="checkbox-group">
               {dropdownData.cities.map((city, idx) => (
                 <label key={idx} className="checkbox-option">
@@ -321,23 +306,22 @@ function Constructor() {
                 </label>
               ))}
             </div>
+        </section>
+
+        {/* Этап 7: Отображение графика */}
+        <section className="step step-7">
+          <h2>Этап 7. Отображение графика</h2>
+          {chartData ? (
+            <ChartDisplay chartType={selectedChart} chartData={chartData} />
           ) : (
-            <select
-              className="dropdown"
-              onChange={(e) => handleOptionChange("city", e.target.value)}
-            >
-              <option value="">Выберите город</option>
-              {dropdownData.cities.map((city, idx) => (
-                <option key={idx} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+            <p>Данные для графика еще не загружены.</p>
           )}
         </section>
+
         <button className="create-chart-button" onClick={saveToAPI}>
           Создать график
         </button>
+
       </main>
     </div>
   );

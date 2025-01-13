@@ -4,9 +4,11 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from peewee import DoesNotExist, IntegrityError
 from passlib.context import CryptContext
-from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders, Year, City
+from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders, Year, City, Data
 from app.ETL.operations import reset_tables
 from app.ETL.upload_files import upload_file
+from typing import Union, List
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -93,9 +95,6 @@ async def reset_tables_endpoint():
         return JSONResponse(status_code=500, content=result)
 
 
-from typing import Union, List
-from pydantic import BaseModel
-
 # Модель данных для валидации входящего тела запроса
 class ChartRequest(BaseModel):
     chartType: str
@@ -108,14 +107,126 @@ class ChartRequest(BaseModel):
 @app.post("/create-chart")
 async def create_chart(data: ChartRequest):
     # Вывод данных в консоль
-    print("Полученные данные для создания диаграммы:")
-    print(data.dict())
+    top_params = data.topParam if isinstance(data.topParam, list) else [data.topParam]
+    side_params = data.sideParam if isinstance(data.sideParam, list) else [data.sideParam]
+    years = data.year if isinstance(data.year, list) else [data.year]
+    cities = data.city if isinstance(data.city, list) else [data.city]
 
-    # Возвращаем успешный ответ
-    return {"message": "Данные успешно получены", "data": data.dict()}
+    top_headers_id = [TopHeaders.get_or_none(TopHeaders.header == top_param).id for top_param in top_params]
+    side_headers_id = [SideHeaders.get_or_none(SideHeaders.header == side_param).id for side_param in side_params]
+    years_id = [Year.get_or_none(Year.year == year).id for year in years]
+    cities_id = [City.get_or_none(City.city == city).id for city in cities]
+    section = Section.get_or_none(Section.section == data.section).id
 
+    # Список всех идентификаторов
+    lists = [top_headers_id, side_headers_id, years_id, cities_id]
 
+    # Подсчет списков с более чем одним элементом
+    count_more_than_one = sum(1 for lst in lists if len(lst) > 1)
 
+    # Проверка условия
+    if count_more_than_one > 1:
+        raise HTTPException(status_code=422, detail="Ошибка: два или более списков имеют больше одного элемента.")
+    elif len(side_headers_id) > 1:
+        values = []
+        for side_header_id in side_headers_id:
+            query = (
+                Data.select()
+                .where(
+                    (Data.section == section) &
+                    (Data.top_header == top_headers_id[0]) &
+                    (Data.side_header == side_header_id) &
+                    (Data.year == years_id[0]) &
+                    (Data.city == cities_id[0])
+                )
+            )
+            try:
+                result = query.get().value
+                values.append(result)
+            except DoesNotExist:
+                print("Запись не найдена.")
+        return {
+            'top_headers': top_params[0],
+            'side_headers': side_params,
+            "values": values,
+            'year': years[0],
+            'city': cities[0],
+        }
+    elif len(top_headers_id) > 1:
+        values = []
+        for top_header_id in top_headers_id:
+            query = (
+                Data.select()
+                .where(
+                    (Data.section == section) &
+                    (Data.top_header == top_header_id) &
+                    (Data.side_header == side_headers_id[0]) &
+                    (Data.year == years_id[0]) &
+                    (Data.city == cities_id[0])
+                )
+            )
+            try:
+                result = query.get().value
+                values.append(result)
+            except DoesNotExist:
+                print("Запись не найдена.")
+        return {
+            'top_headers': top_params,
+            'side_headers': side_params[0],
+            "values": values,
+            'year': years[0],
+            'city': cities[0],
+        }
+    elif len(years_id) > 1:
+        values = []
+        for year_id in years_id:
+            query = (
+                Data.select()
+                .where(
+                    (Data.section == section) &
+                    (Data.top_header == top_headers_id[0]) &
+                    (Data.side_header == side_headers_id[0]) &
+                    (Data.year == year_id) &
+                    (Data.city == cities_id[0])
+                )
+            )
+            try:
+                result = query.get().value
+                values.append(result)
+            except DoesNotExist:
+                print("Запись не найдена.")
+        return {
+            'top_headers': top_params[0],
+            'side_headers': side_params[0],
+            "values": values,
+            'year': years,
+            'city': cities[0],
+        }
+    elif len(cities_id) > 1:
+        values = []
+        for city_id in cities_id:
+            query = (
+                Data.select()
+                .where(
+                    (Data.section == section) &
+                    (Data.top_header == top_headers_id[0]) &
+                    (Data.side_header == side_headers_id[0]) &
+                    (Data.year == years_id[0]) &
+                    (Data.city == city_id)
+                )
+            )
+            try:
+                result = query.get().value
+                values.append(result)
+            except DoesNotExist:
+                print("Запись не найдена.")
+        return {
+            'top_headers': top_params[0],
+            'side_headers': side_params[0],
+            "values": values,
+            'year': years[0],
+            'city': cities,
+        }
 
 @app.get("/dropdown-options/section")
 async def get_section():
