@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from peewee import DoesNotExist, IntegrityError
 from passlib.context import CryptContext
-from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders, Year, City, Data
+from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders, Year, City, Data, NearlyUpload
 from app.ETL.operations import reset_tables
 from app.ETL.upload_files import upload_file
 from typing import Union, List
@@ -289,4 +289,23 @@ async def upload_tables(files: List[UploadFile] = File(...)):
         result = await upload_file(file)
         print(result)
         results.append({"filename": file.filename, "status": result})
+    NearlyUpload(username=Users.get_or_none(Users.id == 1), count_of_tables=len(files)).save()
     return JSONResponse(content={"results": results})
+
+@app.get('/nearly_tables')
+async def get_nearly_tables():
+    # Получаем все записи из NearlyUpload с объединением с Users
+    all_info = (NearlyUpload
+                 .select(NearlyUpload, Users.username)
+                 .join(Users))
+
+    # Формируем список словарей для отправки на фронт
+    result = []
+    for upload in all_info:
+        result.append({
+            'username': upload.username.username,  # Получаем имя пользователя
+            'count_of_tables': upload.count_of_tables,
+            'datetime': upload.datetime.strftime('%Y-%m-%d %H:%M:%S')  # Преобразуем дату в строку
+        })
+
+    return result

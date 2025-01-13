@@ -14,6 +14,7 @@ def reset_tables():
         Year.drop_table()
         Users.drop_table()
         Section.drop_table()
+        NearlyUpload.drop_table()
 
         # Создаём таблицы
         City.create_table()
@@ -23,6 +24,7 @@ def reset_tables():
         TopHeaders.create_table()
         Data.create_table()
         Users.create_table()
+        NearlyUpload.create_table()
 
         return {"success": True, "message": "Таблицы успешно пересозданы"}
     except peewee.InternalError as px:
