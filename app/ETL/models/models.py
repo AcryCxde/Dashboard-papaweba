@@ -49,7 +49,10 @@ class Users(BaseModel):
     username = CharField()
     password_hash = CharField()
 
+
 class NearlyUpload(BaseModel):
     username = ForeignKeyField(Users, backref='keys', on_delete='CASCADE')
     count_of_tables = IntegerField()
     datetime = DateTimeField(default=datetime.now)
+
+

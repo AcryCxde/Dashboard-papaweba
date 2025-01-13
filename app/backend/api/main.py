@@ -304,7 +304,7 @@ async def get_nearly_tables():
     for upload in all_info:
         result.append({
             'username': upload.username.username,  # Получаем имя пользователя
-            'count_of_tables': upload.count_of_tables,
+            'count_of_tables': upload.count_of_tables, # Число
             'datetime': upload.datetime.strftime('%Y-%m-%d %H:%M:%S')  # Преобразуем дату в строку
         })
 

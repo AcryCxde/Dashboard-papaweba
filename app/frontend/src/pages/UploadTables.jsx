@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/UploadTables.css';
 
 const Table = () => {
   const [uploadProgress, setUploadProgress] = useState({ loaded: 0, total: 0 });
-  const [data, setData] = useState([
-    { name: "Волейбол 2020-2022", fields: "Всего, Волейбол", date: "11.01.2025" },
-    { name: "Новые работники", fields: "Специалисты, впервые при...", date: "10.01.2025" },
-  ]);
+  const [data, setData] = useState([]);
+
+  // Функция для получения данных с сервера
+  const fetchTableData = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/nearly_tables');
+      if (!response.ok) {
+        throw new Error(`Ошибка загрузки данных: ${response.statusText}`);
+      }
+      const tableData = await response.json();
+      setData(tableData);
+    } catch (error) {
+      console.error('Ошибка при загрузке данных таблицы:', error.message);
+    }
+  };
+
+  // Вызов fetchTableData при загрузке страницы
+  useEffect(() => {
+    fetchTableData();
+  }, []);
 
   const handleFileUpload = async (event) => {
     const files = event.target.files;
@@ -17,14 +33,12 @@ const Table = () => {
 
     setUploadProgress({ loaded: 0, total: totalFiles });
 
-    // Создаем FormData и добавляем все файлы
     const formData = new FormData();
     for (const file of files) {
-      formData.append("files", file); // Ключ должен совпадать с параметром эндпоинта на сервере
+      formData.append("files", file);
     }
 
     try {
-      // Отправляем файлы на сервер
       const response = await fetch("http://127.0.0.1:8000/upload-tables", {
         method: "POST",
         body: formData,
@@ -37,13 +51,14 @@ const Table = () => {
       const result = await response.json();
       console.log("Результат загрузки:", result);
 
-      // Обновляем прогресс по мере обработки каждого файла
       for (const fileResult of result.results) {
         if (fileResult.status === "Done") {
           loadedFiles += 1;
           setUploadProgress({ loaded: loadedFiles, total: totalFiles });
         }
       }
+      // Обновляем таблицу после успешной загрузки
+      fetchTableData();
     } catch (error) {
       console.error("Ошибка при загрузке:", error.message);
     }
@@ -79,9 +94,9 @@ const Table = () => {
         <tbody>
           {data.map((row, index) => (
             <tr key={index}>
-              <td>{row.name}</td>
-              <td>{row.fields}</td>
-              <td>{row.date}</td>
+              <td>{row.username}</td>
+              <td>{row.count_of_tables}</td>
+              <td>{row.datetime}</td>
             </tr>
           ))}
         </tbody>
