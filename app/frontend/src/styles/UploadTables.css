@@ -7,6 +7,7 @@
 
 .upload-table-button {
   font-family: "Montserrat", serif;
+  text-align: center;
   font-size: 18px;
   display: block;
   width: 300px;
@@ -50,4 +51,11 @@
 
 .custom-table tr:nth-child(even) td {
   background-color: #f9f9f9;
+}
+
+.progress-container {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px auto 10px;
 }

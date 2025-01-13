@@ -63,6 +63,7 @@ body {
 }
 
 .create-chart-button {
+  font-family: "Montserrat", serif;
   display: block;
   width: 300px;
   margin: auto;

@@ -45,6 +45,5 @@ class Data(BaseModel):
 
 
 class Users(BaseModel):
-    # todo Сделать, чтобы данные были только строковым типом
     username = CharField()
     password_hash = CharField()

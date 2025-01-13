@@ -266,18 +266,17 @@ function Constructor() {
                 <label key={idx} className="checkbox-option">
                   <input
                     type="checkbox"
-                    value={year}
-                    checked={selectedOptions.year.includes(year)}
+                    value={String(year)} // Приведение к строке для унификации типов
+                    checked={selectedOptions.year.includes(String(year))}
                     onChange={(e) => {
-                      const { checked, value } = e.target;
-                      handleOptionChange(
-                        "year",
-                        checked
-                          ? [...selectedOptions.year, value]
-                          : selectedOptions.year.filter((item) => item !== value)
-                      );
-                    }}
-                  />
+                        const { checked, value } = e.target;
+                        const updatedYears = checked
+                          ? Array.from(new Set([...selectedOptions.year, value])) // Уникальные значения
+                          : selectedOptions.year.filter((item) => item !== value);
+
+                        handleOptionChange("year", updatedYears);
+                      }}
+                    />
                   {year}
                 </label>
               ))}

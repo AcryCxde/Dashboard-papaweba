@@ -1,11 +1,12 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from peewee import DoesNotExist, IntegrityError
 from passlib.context import CryptContext
 from app.ETL.models.models import Users, Section, SideHeaders, TopHeaders, Year, City
-from app.ETL.operations import reset_tables  # Импортируем функцию пересоздания таблиц
+from app.ETL.operations import reset_tables
+from app.ETL.upload_files import upload_file
 
 app = FastAPI()
 
@@ -169,3 +170,12 @@ async def get_city():
     if not data:
         raise HTTPException(status_code=404, detail="No data found")
     return {"data": data}
+
+@app.post("/upload-tables")
+async def upload_tables(files: List[UploadFile] = File(...)):
+    results = []
+    for file in files:
+        result = await upload_file(file)
+        print(result)
+        results.append({"filename": file.filename, "status": result})
+    return JSONResponse(content={"results": results})

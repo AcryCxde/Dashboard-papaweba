@@ -1,5 +1,6 @@
-from extract import *
-from models.models import *
+from fastapi import UploadFile
+from .extract import extract_section
+from .models.models import *
 
 # Кэш для объектов
 city_cache = {}
@@ -34,16 +35,19 @@ def get_or_create_topheader(cache, header, section):
     return cache[key]
 
 
-def upload_files(files: list):
-    for file in files:
-        # Определение города и года из имени файла
-        file_city = ' '.join(file.split("\\")[-1].split()[:-1])
-        file_year = int(file.split("\\")[-1].split()[1].split('.')[0])
+async def upload_file(file: UploadFile):
+    print("Начали")
+    # Определение города и года из имени файла
+    file_city = ' '.join(file.filename.split()[:-1])
+    file_year = int(file.filename.split()[-1].split('.')[0])
 
-        for section_number in range(1, 7):
-            res = extract_section(file, section_number)
-            res = create_section(res, file_city, file_year, section_number)
-            print(res)
+    for section_number in range(1, 7):
+        res = extract_section(file.file, section_number)
+        res = create_section(res, file_city, file_year, section_number)
+        print(res)
+        if res == "Section 6 is Done":
+            return "Done"
+    return "Что то пошло не так"
 
 
 def create_section(section, city, year, section_number):
@@ -52,7 +56,7 @@ def create_section(section, city, year, section_number):
     year_obj = get_or_create_cached(Year, year_cache, year=year)
     section_obj = get_or_create_cached(Section, section_cache, section=section_number)
 
-    # Кэширование заголовков строк и столбцов
+    # Проверка существования заголовков
     side_headers_list = [
         get_or_create_sideheader(side_headers_cache, header=name, section=section_number)
         for name in section['side_headers']
@@ -68,22 +72,26 @@ def create_section(section, city, year, section_number):
     for row_id, row in enumerate(section['data']):
         for column_id in range(len(row)):
             if value := row[column_id]:
-                data_objects.append(
-                    Data(
-                        top_header=top_headers_list[column_id],
-                        side_header=side_headers_list[row_id],
-                        city=city_obj,
-                        year=year_obj,
-                        section=section_obj,
-                        value=value
+                # Проверка на соответствие индексов
+                if row_id < len(side_headers_list) and column_id < len(top_headers_list):
+                    data_objects.append(
+                        Data(
+                            top_header=top_headers_list[column_id],
+                            side_header=side_headers_list[row_id],
+                            city=city_obj,
+                            year=year_obj,
+                            section=section_obj,
+                            value=value
+                        )
                     )
-                )
+                else:
+                    print(f"Warning: Index out of range for row {row_id} and column {column_id}")
 
     # Пакетная вставка в базу данных
-    Data.bulk_create(data_objects)
+    if data_objects:
+        Data.bulk_create(data_objects)
 
     return f'Section {section_number} is Done'
 
 
-print(upload_files(["D:\Рабочий стол\Примеры\Свердловская область 73 МО 2023\Свердловская область 73 МО 2023\ЕКАТЕРИНБУРГ 2023.xlsm"]))
 #print(upload_files(["D:\My Projects\Github\Dashboard\ЕКАТЕРИНБУРГ 2023.xlsm", "D:\My Projects\Github\Dashboard\НИЖНИЙ_ТАГИЛ 2023.xlsx"]))
